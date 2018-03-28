@@ -1,0 +1,9 @@
+data/*
+writeup/*
+.DS_Store
+.Rproj.user
+.RData
+.Rhistory
+.Ruserdata
+
+
