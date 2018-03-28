@@ -16,13 +16,35 @@ data_long <- data.frame(do.call("rbind", lapply(seq_len(length(data_cols)),
                         depths_mm = depth_long)
 data_long <- data_long[-which(is.na(data_long$depths_mm)), ]
 
+# sort data by species
+data_long <- data_long[order(data_long$sp), ]
+
+# create species-specific IDs for individual plants
+data_long$plant_code <- as.integer(as.factor(paste0(data_long$spp, data_long$plant, data_long$yr)))
+
 # prepare binned data
+breaks_set <- seq(-25, 95, by = 1)
+hist_fun <- function(x) hist(x,
+                             breaks = breaks_set,
+                             plot = FALSE)[c("counts", "mids")]
+data_hist <- matrix(NA,
+                    nrow = length(unique(data_long$plant_code)),
+                    ncol = (length(breaks_set) - 1))
+data_info <- matrix(NA, nrow = nrow(data_hist), ncol = 4)
+for (i in seq_along(unique(data_long$plant_code))) {
 
-## CLEAN UP plant + spp columns to give an ID and SPCODE
-
-hist_fun <- function(x) hist(x, plot = FALSE)[c("counts", "mids")]
-data_hist <- tapply(data_long$depths_mm,
-                    list(data_long$plant, data_long$spp,
-                         data_long$yr, data_long$treat),
-                    hist_fun)
-
+  data_subset <- which(data_long$plant_code == unique(data_long$plant_code)[i])
+  hist_tmp <- hist_fun(data_long$depths_mm[data_subset])
+  data_hist[i, ] <- hist_tmp$counts
+  data_info[i, ] <- c(unique(data_long$plant_code[data_subset]),
+                      unique(data_long$treat[data_subset]),
+                      unique(data_long$yr[data_subset]) + 1,
+                      unique(data_long$spp[data_subset]))
+  
+}
+data_mids <- hist_tmp$mids
+data_info <- as.data.frame(data_info,
+                           stringsAsFactors = FALSE)
+colnames(data_info) <- c("CODE", "TREATMENT", "YEAR", "SPP")
+data_info$CODE <- as.integer(data_info$CODE)
+data_info$YEAR <- as.integer(data_info$YEAR)
