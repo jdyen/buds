@@ -23,7 +23,7 @@ data_long <- data_long[order(data_long$sp), ]
 data_long$plant_code <- as.integer(as.factor(paste0(data_long$spp, data_long$plant, data_long$yr)))
 
 # prepare binned data
-breaks_set <- seq(-25, 95, by = 1)
+breaks_set <- seq(-25, 95, length = 21)
 hist_fun <- function(x) hist(x,
                              breaks = breaks_set,
                              plot = FALSE)[c("counts", "mids")]

@@ -1,5 +1,8 @@
 # R code to fit bud depths model
 
+# set working directory
+setwd("~/Dropbox/research/buds/")
+
 # load packages
 library(FREE)
 
@@ -14,7 +17,7 @@ data_set <- list(y = data_hist,
 
 # fit model
 mod <- FREEfit(y ~ x, groups = data_set$z, data = data_set,
-               n.iters = 1000, n.burnin = 500, n.chains = 2)
+               n.iters = 10, n.burnin = 10, n.chains = 1)
 
 # cross validate fitted model
 # mod_cv <- FREEfitCV(y ~ x, groups = data$z, data = data_set,
