@@ -17,7 +17,7 @@ data_set <- list(y = data_hist,
 
 # fit model
 mod <- FREEfit(y ~ x, groups = data_set$z, data = data_set,
-               n.iters = 10, n.burnin = 10, n.chains = 1)
+               n.iters = 1000, n.burnin = 1000, n.chains = 2)
 
 # cross validate fitted model
 # mod_cv <- FREEfitCV(y ~ x, groups = data$z, data = data_set,
