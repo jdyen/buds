@@ -4,6 +4,15 @@
 raw_data <- read.csv("./data/raw/compiled buddepths_for_Jian.csv",
                      stringsAsFactors = FALSE)
 
+# load p_resprout data
+resprout <- read.csv("data/raw/survival-data.csv", stringsAsFactors = FALSE)
+
+# remove c2 treatment
+raw_data <- raw_data[raw_data$treat %in% c('c', 'b'), ]
+
+# load trait data
+trait_data <- read.csv("./data/raw/buds-traits-data.csv")
+
 # identify columns that contain depth measurements
 data_cols <- c(6:ncol(raw_data))
 
@@ -23,7 +32,7 @@ data_long <- data_long[order(data_long$sp), ]
 data_long$plant_code <- as.integer(as.factor(paste0(data_long$spp, data_long$plant, data_long$yr)))
 
 # prepare binned data
-breaks_set <- seq(-25, 95, length = 21)
+breaks_set <- seq(-15, 95, length = 21)
 hist_fun <- function(x) hist(x,
                              breaks = breaks_set,
                              plot = FALSE)[c("counts", "mids")]
@@ -48,3 +57,29 @@ data_info <- as.data.frame(data_info,
 colnames(data_info) <- c("CODE", "TREATMENT", "YEAR", "SPP")
 data_info$CODE <- as.integer(data_info$CODE)
 data_info$YEAR <- as.integer(data_info$YEAR)
+
+# fill NAs in trait data with mean values
+for (i in which(apply(trait_data, 2, function(x) any(is.na(x)))))
+  trait_data[which(is.na(trait_data[, i])), i] <- mean(trait_data[, i], na.rm = TRUE)
+
+# standardise trait data
+trait_data$MAXHTstd <- scale(trait_data$MAXHT)
+trait_data$STEMCATSstd <- scale(trait_data$STEMCATS)
+trait_data$SLAstd <- scale(trait_data$SLA)
+trait_data$LWCstd <- scale(trait_data$LWC)
+trait_data$BAstd <- scale(trait_data$BA)
+trait_data$CAstd <- scale(trait_data$CA)
+
+# add trait data to data_info
+trait_rows <- match(data_info$SPP, trait_data$CODE)
+data_info$GFORM <- trait_data$GFORM[trait_rows]
+data_info$MAXHTstd <- trait_data$MAXHTstd[trait_rows]
+data_info$STEMCATSstd <- trait_data$STEMCATSstd[trait_rows]
+data_info$SLAstd <- trait_data$SLAstd[trait_rows]
+data_info$LWCstd <- trait_data$LWCstd[trait_rows]
+data_info$BAstd <- trait_data$BAstd[trait_rows]
+data_info$CAstd <- trait_data$CAstd[trait_rows]
+
+# add trait data to resprout data
+resprout <- data.frame(resprout,
+                       trait_data[match(resprout$spp, trait_data$CODE), ])
