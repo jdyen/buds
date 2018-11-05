@@ -322,7 +322,7 @@ dev.off()
 pdf(file = './outputs/plots/trait_effect_burn_maxht.pdf', width = 7, height = 7)
 plot_name <- attr(trait_data$MAXHTstd, 'scaled:center') + trait_seq[[1]] * attr(trait_data$MAXHTstd, 'scaled:scale') 
 par(mfrow = c(2, 2), mar = c(5.1, 5.1, 1.8, 1.1))
-ylim_set <- c(0, 1.2)
+ylim_set <- c(0, 1.6)
 for (i in seq_along(trait_effect_burn[[1]])) {
   
   # calculate fitted summaries
@@ -357,7 +357,7 @@ dev.off()
 pdf(file = './outputs/plots/trait_effect_burn_stems.pdf', width = 7, height = 7)
 plot_name <- attr(trait_data$STEMCATSstd, 'scaled:center') + trait_seq[[2]] * attr(trait_data$STEMCATSstd, 'scaled:scale') 
 par(mfrow = c(2, 2), mar = c(5.1, 5.1, 1.8, 1.1))
-ylim_set <- c(0, 1.2)
+ylim_set <- c(0, 1.6)
 for (i in seq_along(trait_effect_burn[[2]])) {
   
   # calculate fitted summaries
@@ -392,7 +392,7 @@ dev.off()
 pdf(file = './outputs/plots/trait_effect_burn_sla.pdf', width = 7, height = 7)
 plot_name <- attr(trait_data$SLAstd, 'scaled:center') + trait_seq[[3]] * attr(trait_data$SLAstd, 'scaled:scale') 
 par(mfrow = c(2, 2), mar = c(5.1, 5.1, 1.8, 1.1))
-ylim_set <- c(0, 1.2)
+ylim_set <- c(0, 1.6)
 for (i in seq_along(trait_effect_burn[[3]])) {
   
   # calculate fitted summaries
@@ -427,7 +427,7 @@ dev.off()
 pdf(file = './outputs/plots/trait_effect_clip_maxht.pdf', width = 7, height = 7)
 plot_name <- attr(trait_data$MAXHTstd, 'scaled:center') + trait_seq[[1]] * attr(trait_data$MAXHTstd, 'scaled:scale') 
 par(mfrow = c(2, 2), mar = c(5.1, 5.1, 1.8, 1.1))
-ylim_set <- c(0, 1.2)
+ylim_set <- c(0, 1.6)
 for (i in seq_along(trait_effect_clip[[1]])) {
   
   # calculate fitted summaries
@@ -462,7 +462,7 @@ dev.off()
 pdf(file = './outputs/plots/trait_effect_clip_stems.pdf', width = 7, height = 7)
 plot_name <- attr(trait_data$STEMCATSstd, 'scaled:center') + trait_seq[[2]] * attr(trait_data$STEMCATSstd, 'scaled:scale') 
 par(mfrow = c(2, 2), mar = c(5.1, 5.1, 1.8, 1.1))
-ylim_set <- c(0, 1.2)
+ylim_set <- c(0, 1.6)
 for (i in seq_along(trait_effect_clip[[2]])) {
   
   # calculate fitted summaries
@@ -497,7 +497,7 @@ dev.off()
 pdf(file = './outputs/plots/trait_effect_clip_sla.pdf', width = 7, height = 7)
 plot_name <- attr(trait_data$SLAstd, 'scaled:center') + trait_seq[[3]] * attr(trait_data$SLAstd, 'scaled:scale') 
 par(mfrow = c(2, 2), mar = c(5.1, 5.1, 1.8, 1.1))
-ylim_set <- c(0, 1.2)
+ylim_set <- c(0, 1.6)
 for (i in seq_along(trait_effect_clip[[3]])) {
   
   # calculate fitted summaries
@@ -531,8 +531,15 @@ dev.off()
 
 
 # trait effects
-pdf(file = './outputs/plots/regression_coefficients.pdf', width = 7, height = 7)
-par(mfrow = c(3, 2), mar = c(4.8, 5.1, 2.5, 1.1))
+pdf(file = './outputs/plots/regression_coefficients.pdf', width = 7, height = 10)
+layout(matrix(1:8, ncol = 2, byrow = TRUE), heights = c(0.12, rep(1, 3)))
+par(mar = c(0, 0, 0, 0))
+plot(1 ~ 1, type = "n", bty = "n", xaxt = "n", yaxt = "n", xlab = "", ylab = "")
+text(1, 1, "Clip", cex = 2.8, xpd = TRUE)
+plot(1 ~ 1, type = "n", bty = "n", xaxt = "n", yaxt = "n", xlab = "", ylab = "")
+text(1, 1, "Burn", cex = 2.8, xpd = TRUE)
+par(mar = c(4.8, 5.1, 2.5, 1.1))
+# par(mfrow = c(3, 2), mar = c(4.8, 5.1, 2.5, 1.1))
 ylim_set <- c(-0.1, 4.5)
 # plot_label <- letters[1:6]
 plot_label <- rep(c("Max. height", "Stem counts", "SLA"), each = 2)
@@ -553,7 +560,8 @@ for (i in seq_len(3)) {
        type = 'l', las = 1, bty = 'l',
        lwd = 2, col = 'gray30',
        xlab = 'Depth (mm)', ylab = 'Effect',
-       ylim = ylim_set)
+       ylim = ylim_set,
+       cex.lab = 1.5)
   
   # plot shaded regions for credible intervals
   polygon(c(hist_tmp$mids, rev(hist_tmp$mids)),
@@ -568,7 +576,7 @@ for (i in seq_len(3)) {
         c(1, 1), lty = 2)
   
   #
-  mtext(plot_label[(2 * i) - 1], side = 3, line = 0.5, adj = -0.02, cex = 1.5)
+  mtext(plot_label[(2 * i) - 1], side = 3, line = 0.5, adj = -0.02, cex = 1.3)
   
   # calculate fitted summaries
   plot_mean <- apply(burn_parameters, 2, mean)
@@ -582,7 +590,8 @@ for (i in seq_len(3)) {
        type = 'l', las = 1, bty = 'l',
        lwd = 2, col = 'gray30',
        xlab = 'Depth (mm)', ylab = 'Effect',
-       ylim = ylim_set)
+       ylim = ylim_set,
+       cex.lab = 1.5)
   
   # plot shaded regions for credible intervals
   polygon(c(hist_tmp$mids, rev(hist_tmp$mids)),
@@ -597,7 +606,7 @@ for (i in seq_len(3)) {
         c(1, 1), lty = 2)
   
   #
-  mtext(plot_label[(2 * i)], side = 3, line = 0.5, adj = -0.02, cex = 1.5)
+  # mtext(plot_label[(2 * i)], side = 3, line = 0.5, adj = -0.02, cex = 1.5)
   
 }
 dev.off()
@@ -655,7 +664,7 @@ slope_quant <- apply(slope_combos, 2, quantile, p = c(0.025, 0.1, 0.9, 0.975))
 plot(seq_len(ncol(slope_quant)), type = "n",
      las = 1, bty = "l",
      xlab = "", ylab = "",
-     xlim = c(-1.5, 2.0),
+     xlim = c(-2.0, 2.5),
      xaxt = "n", yaxt = "n")
 for (i in seq_along(slope_mean)) {
   points(slope_mean[i], length(slope_mean) + 1 - i, pch = 16, cex = 1)
@@ -667,7 +676,7 @@ for (i in seq_along(slope_mean)) {
         lwd = 3)
 }
 lines(c(0, 0), c(0, length(slope_mean) + 1), lty = 2)
-axis(1, at = c(-1.5, 0.0, 1.5))
+axis(1, at = c(-2.0, -1.0, 0.0, 1.0, 2.0))
 axis(2, at = seq_len(ncol(slope_quant)),
      labels = rev(colnames(slope_combos)), las = 1)
 mtext("b", side = 3, line = 0.5, adj = -0.02, cex = 1.5)
