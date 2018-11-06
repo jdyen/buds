@@ -1,8 +1,0 @@
-TO DO:
-
-Add trait data
-Add growth form data
-
-Run, plot, check.
-
-
