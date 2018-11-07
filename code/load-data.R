@@ -1,17 +1,16 @@
 # code to load and clean buds data
 
 # load raw data
-raw_data <- read.csv("./data/raw/compiled buddepths_for_Jian.csv",
-                     stringsAsFactors = FALSE)
+raw_data <- read.csv("./data/compiled-bud-depths.csv", stringsAsFactors = FALSE)
 
 # load p_resprout data
-resprout <- read.csv("data/raw/survival-data.csv", stringsAsFactors = FALSE)
+resprout <- read.csv("data/survival-data.csv", stringsAsFactors = FALSE)
 
 # remove c2 treatment
-raw_data <- raw_data[raw_data$treat %in% c('c', 'b'), ]
+raw_data <- raw_data[raw_data$treat %in% c("c", "b"), ]
 
 # load trait data
-trait_data <- read.csv("./data/raw/buds-traits-data.csv")
+trait_data <- read.csv("./data/buds-traits-data.csv")
 
 # identify columns that contain depth measurements
 data_cols <- c(6:ncol(raw_data))
@@ -20,8 +19,8 @@ data_cols <- c(6:ncol(raw_data))
 depth_long <- unlist(raw_data[, data_cols])
 
 # add treatment info to depth measurements
-data_long <- data.frame(do.call("rbind", lapply(seq_len(length(data_cols)),
-                                                function(x) raw_data[, 1:5])),
+data_long <- data.frame(do.call(rbind, lapply(seq_len(length(data_cols)),
+                                              function(x) raw_data[, 1:5])),
                         depths_mm = depth_long)
 data_long <- data_long[-which(is.na(data_long$depths_mm)), ]
 
