@@ -66,6 +66,118 @@ for (i in seq_along(beta_gform_burn)) {
 }
 dev.off()
 
+pdf(file = './outputs/plots/fitted_intercepts.pdf', width = 7, height = 7)
+plot_name <- c('Forbs', 'Grasses', 'Sub-shrubs', 'Woody plants')
+par(mfrow = c(2, 2), mar = c(4.8, 5.1, 2.5, 1.1))
+yaxs_lims <- c(-15, 95)
+xaxs_lims <- c(-6.5, 6.5)
+eps_set <- 0.2
+for (i in seq_along(beta_gform_burn)) {
+  
+  # calculate fitted summaries
+  gform_mean1 <- apply(beta_gform_burn[[i]], 2, mean)
+  gform_vlow1 <- apply(beta_gform_burn[[i]], 2, quantile, 0.025)
+  gform_low1 <- apply(beta_gform_burn[[i]], 2, quantile, 0.1)
+  gform_high1 <- apply(beta_gform_burn[[i]], 2, quantile, 0.9)
+  gform_vhigh1 <- apply(beta_gform_burn[[i]], 2, quantile, 0.975)
+  gform_mean <- apply(beta_gform_clip[[i]], 2, mean)
+  gform_vlow <- apply(beta_gform_clip[[i]], 2, quantile, 0.025)
+  gform_low <- apply(beta_gform_clip[[i]], 2, quantile, 0.1)
+  gform_high <- apply(beta_gform_clip[[i]], 2, quantile, 0.9)
+  gform_vhigh <- apply(beta_gform_clip[[i]], 2, quantile, 0.975)
+  
+  plot(c(-exp(gform_mean) / 5.5), hist_tmp$mids,
+       type = 'n', las = 1, bty = 'l',
+       ylab = 'Depth (mm)', xlab = 'Buds / mm',
+       ylim = yaxs_lims, xlim = xaxs_lims,
+       xaxt = "n")
+  
+  axis(1, at = seq(-6, 6, by = 2), labels = abs(seq(-6, 6, by = 2)))
+  
+  # add shaded region to denote sampling limits
+  polygon(2 * c(yaxs_lims, rev(yaxs_lims)) - 5,
+          c(-20, -20, -5, -5),
+          border = NA, col = ggplot2::alpha('gray85', 0.5))
+  polygon(2 * c(yaxs_lims, rev(yaxs_lims)) - 5,
+          c(80, 80, 150, 150),
+          border = NA, col = ggplot2::alpha('gray85', 0.5))
+  
+  # plot shaded regions for credible intervals
+  polygon(c(-exp(gform_vlow) / 5.5 - eps_set, rev(-exp(gform_vhigh) / 5.5) - eps_set),
+          c(hist_tmp$mids, rev(hist_tmp$mids)),
+          border = NA, col = 'gray75')
+  polygon(c(-exp(gform_low) / 5.5 - eps_set, rev(-exp(gform_high) / 5.5) - eps_set),
+          c(hist_tmp$mids, rev(hist_tmp$mids)),
+          border = NA, col = 'gray55')
+  lines(c(-exp(gform_mean) / 5.5) - eps_set, hist_tmp$mids, lwd = 2, col = 'black')
+
+  polygon(c(exp(gform_vlow1) / 5.5 + eps_set, rev(exp(gform_vhigh1) / 5.5) + eps_set),
+          c(hist_tmp$mids, rev(hist_tmp$mids)),
+          border = NA, col = 'gray75')
+  polygon(c(exp(gform_low1) / 5.5 + eps_set, rev(exp(gform_high1) / 5.5) + eps_set),
+          c(hist_tmp$mids, rev(hist_tmp$mids)),
+          border = NA, col = 'gray55')
+  lines(c(exp(gform_mean1) / 5.5) + eps_set, hist_tmp$mids, lwd = 2, col = 'black')
+  
+  lines(c(0, 0),
+        c(min(hist_tmp$mids) - 10, max(hist_tmp$mids) + 10),
+        lty = 1, lwd = 1, col = "black")
+  
+  # add some labels
+  mtext(plot_name[i], side = 3, line = 0.5, adj = -0.02, cex = 1.5)
+  
+}
+dev.off()
+
+pdf(file = './outputs/plots/burn_effects.pdf', width = 7, height = 7)
+
+plot_name <- c('Forbs', 'Grasses', 'Sub-shrubs', 'Woody plants')
+par(mfrow = c(2, 2), mar = c(4.8, 5.1, 2.5, 1.1))
+xaxs_lims <- c(-15, 95)
+yaxs_lims <- c(-1.2, 4.5)
+
+for (i in seq_along(beta_gform_burn)) {
+  
+  # calculate fitted summaries
+  burn_int <- (exp(beta_gform_burn[[i]]) - exp(beta_gform_clip[[i]])) / 5.5
+  gform_mean <- apply(burn_int, 2, mean)
+  gform_vlow <- apply(burn_int, 2, quantile, 0.025)
+  gform_low <- apply(burn_int, 2, quantile, 0.1)
+  gform_high <- apply(burn_int, 2, quantile, 0.9)
+  gform_vhigh <- apply(burn_int, 2, quantile, 0.975)
+  
+  plot(gform_mean ~ hist_tmp$mids,
+       type = 'n', las = 1, bty = 'l',
+       xlab = 'Depth (mm)', ylab = 'Buds / mm',
+       ylim = yaxs_lims, xlim = xaxs_lims)
+  
+  # add shaded region to denote sampling limits
+  polygon(c(-20, -20, -5, -5),
+          2 * c(yaxs_lims, rev(yaxs_lims)),
+          border = NA, col = ggplot2::alpha('gray85', 0.5))
+  polygon(c(80, 80, 150, 150),
+          2 * c(yaxs_lims, rev(yaxs_lims)),
+          border = NA, col = ggplot2::alpha('gray85', 0.5))
+  
+  # plot shaded regions for credible intervals
+  polygon(c(hist_tmp$mids, rev(hist_tmp$mids)),
+          c(gform_vlow, rev(gform_vhigh)),
+          border = NA, col = 'gray75')
+  polygon(c(hist_tmp$mids, rev(hist_tmp$mids)),
+          c(gform_low, rev(gform_high)),
+          border = NA, col = 'gray55')
+  
+  lines(c(min(hist_tmp$mids) - 10, max(hist_tmp$mids) + 10),
+        c(0, 0), lty = 2)
+  lines(gform_mean ~ hist_tmp$mids, lwd = 2, col = 'black')
+  
+  # add some labels
+  mtext(plot_name[i], side = 3, line = 0.5, adj = -0.02, cex = 1.5)
+  
+}
+
+dev.off()
+
 pdf(file = './outputs/plots/fitted_clip.pdf', width = 7, height = 7)
 plot_name <- c('Forbs', 'Grasses', 'Sub-shrubs', 'Woody plants')
 set.seed(123)
@@ -353,9 +465,7 @@ text(1, 1, "Clip", cex = 2.8, xpd = TRUE)
 plot(1 ~ 1, type = "n", bty = "n", xaxt = "n", yaxt = "n", xlab = "", ylab = "")
 text(1, 1, "Burn", cex = 2.8, xpd = TRUE)
 par(mar = c(4.8, 5.1, 2.5, 1.1))
-# par(mfrow = c(3, 2), mar = c(4.8, 5.1, 2.5, 1.1))
-ylim_set <- c(-0.1, 4.5)
-# plot_label <- letters[1:6]
+ylim_set <- c(0.05, 2.0)
 plot_label <- rep(c("Max. height", "Stem counts", "SLA"), each = 2)
 for (i in seq_len(3)) {
   
@@ -375,7 +485,8 @@ for (i in seq_len(3)) {
        lwd = 2, col = 'gray30',
        xlab = 'Depth (mm)', ylab = 'Effect',
        ylim = ylim_set,
-       cex.lab = 1.5)
+       cex.lab = 1.5,
+       log = "y")
   
   # plot shaded regions for credible intervals
   polygon(c(hist_tmp$mids, rev(hist_tmp$mids)),
@@ -388,6 +499,14 @@ for (i in seq_len(3)) {
   lines(exp(plot_mean) ~ hist_tmp$mids, lwd = 2, col = 'gray30')
   lines(c(min(hist_tmp$mids) - 10, max(hist_tmp$mids) + 10),
         c(1, 1), lty = 2)
+  
+  if (i == 1) {
+    data_clip <- data_long$depths_mm[data_long$treat == "c"]
+    for (j in seq_along(data_clip)) {
+      lines(c(data_clip[j], data_clip[j]), c(0.06, 0.08),
+            lty = 1, lwd = 1, col = "gray30")
+    }
+  }
   
   #
   mtext(plot_label[(2 * i) - 1], side = 3, line = 0.5, adj = -0.02, cex = 1.3)
@@ -405,7 +524,8 @@ for (i in seq_len(3)) {
        lwd = 2, col = 'gray30',
        xlab = 'Depth (mm)', ylab = 'Effect',
        ylim = ylim_set,
-       cex.lab = 1.5)
+       cex.lab = 1.5,
+       log = "y")
   
   # plot shaded regions for credible intervals
   polygon(c(hist_tmp$mids, rev(hist_tmp$mids)),
@@ -418,6 +538,14 @@ for (i in seq_len(3)) {
   lines(exp(plot_mean) ~ hist_tmp$mids, lwd = 2, col = 'gray30')
   lines(c(min(hist_tmp$mids) - 10, max(hist_tmp$mids) + 10),
         c(1, 1), lty = 2)
+  
+  if (i == 1) {
+    data_burn <- data_long$depths_mm[data_long$treat == "b"]
+    for (j in seq_along(data_burn)) {o
+      lines(c(data_burn[j], data_burn[j]), c(0.06, 0.08),
+            lty = 1, lwd = 1, col = "gray30")
+    }
+  }
 
 }
 dev.off()
