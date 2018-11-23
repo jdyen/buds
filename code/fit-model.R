@@ -108,6 +108,13 @@ alpha_resprout_samples <- samples_averaged[, grep('alpha_resprout', colnames(sam
 beta_resprout_samples <- samples_averaged[, grep('beta_resprout', colnames(samples_averaged))]
 p_resprout_samples <- samples_averaged[, grep('p_resprout', colnames(samples_averaged))]
 
+# calculate resprout mean and r2 for binary part of model
+p_resprout_mean <- apply(p_resprout_samples, 2, mean)
+prop_resprout <- sum(resprout$survival) / length(resprout$survival)
+dev_full_sprout <- - 2 * sum(resprout$survival * log(p_resprout_mean) + (1 - resprout$survival) * log(1 - p_resprout_mean))
+dev_null_sprout <- - 2 * sum(resprout$survival * log(prop_resprout) + (1 - resprout$survival) * log(1 - prop_resprout))
+deviance_r2_sprout <- 1 - dev_full_sprout / dev_null_sprout
+
 # summarise observed for comparison with fitted
 y_mean <- matrix(NA, nrow = length(unique(data_set$gform)), ncol = ncol(data_set$y))
 rownames(y_mean) <- unique(data_set$gform)
