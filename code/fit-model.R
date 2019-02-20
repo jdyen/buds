@@ -7,7 +7,7 @@ setwd("~/Dropbox/research/buds/")
 library(greta.fda)
 library(greta)
 
-# load data@
+# load data (currently removing NAs in traits)
 source("./code/load-data.R")
 
 # prepare data setg
@@ -31,7 +31,7 @@ fda_response <- fda_response(y ~ treat * gform +
                                (1 | year) + (1 | spp),
                              data = data_set,
                              spline_settings = list(df = 8, degree = 3),
-                             priors = list(alpha_sd = 1, beta_sd = 1, sigma_max = 1))
+                             priors = list(alpha_sd = 1, beta_sd = 1, sigma_sd = 1))
 
 # prepare data for resprout model
 resprout$GFORM_COMBINED <- resprout$GFORM
@@ -71,10 +71,8 @@ distribution(data_set$y) <- poisson(exp(fda_response$mu))
 distribution(resprout$survival) <- binomial(size = 1, p = p_resprout)
 
 # define greta model
-mod <- model(mu,
-             alpha, beta,
-             alpha_resprout, beta_resprout,
-             p_resprout)
+mod <- model(mu, alpha, beta,
+             alpha_resprout, beta_resprout, p_resprout)
 
 # sample from model
 samples <- mcmc(mod, n_samples = 15000, warmup = 10000, thin = 3)

@@ -58,8 +58,11 @@ data_info$CODE <- as.integer(data_info$CODE)
 data_info$YEAR <- as.integer(data_info$YEAR)
 
 # fill NAs in trait data with mean values
-for (i in which(apply(trait_data, 2, function(x) any(is.na(x)))))
-  trait_data[which(is.na(trait_data[, i])), i] <- mean(trait_data[, i], na.rm = TRUE)
+# for (i in which(apply(trait_data, 2, function(x) any(is.na(x)))))
+#   trait_data[which(is.na(trait_data[, i])), i] <- mean(trait_data[, i], na.rm = TRUE)
+
+# alternative: remove any species with missing trait data
+trait_data <- trait_data[!apply(trait_data, 1, function(x) any(is.na(x))), ]
 
 # standardise trait data
 trait_data$MAXHTstd <- scale(trait_data$MAXHT)
@@ -82,3 +85,11 @@ data_info$CAstd <- trait_data$CAstd[trait_rows]
 # add trait data to resprout data
 resprout <- data.frame(resprout,
                        trait_data[match(resprout$spp, trait_data$CODE), ])
+
+# remove NAs from data_hist, data_info and resprout if they exist
+if (any(is.na(data_info))) {
+  data_hist <- data_hist[!apply(data_info, 1, function(x) any(is.na(x))), ]
+  data_info <- data_info[!apply(data_info, 1, function(x) any(is.na(x))), ]
+}
+if (any(is.na(resprout)))
+  resprout <- resprout[!apply(resprout, 1, function(x) any(is.na(x))), ]

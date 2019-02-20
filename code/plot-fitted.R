@@ -1,7 +1,13 @@
 # create all plots for buds manuscript
 
-pdf(file = './outputs/plots/fitted_burn.pdf', width = 7, height = 7)
-plot_name <- c('Forbs', 'Grasses', 'Sub-shrubs', 'Woody plants')
+# work this out:
+# plot_type <- pdf
+## GET UNITS CORRECT (in vs px)
+# get(plot_type)(file = "PATH", width = width_set, height = height_set)
+
+
+pdf(file = "./outputs/plots/fitted_burn.pdf", width = 7, height = 7)
+plot_name <- c("Forbs", "Grasses", "Sub-shrubs", "Woody plants")
 set.seed(123)
 # plot_name <- letters[1:4]
 par(mfrow = c(2, 2), mar = c(4.8, 5.1, 2.5, 1.1))
@@ -18,8 +24,8 @@ for (i in seq_along(beta_gform_burn)) {
   gform_vhigh <- apply(beta_gform_burn[[i]], 2, quantile, 0.975)
   
   plot(c(exp(gform_mean) / 5.5) ~ hist_tmp$mids,
-       type = 'n', las = 1, bty = 'l',
-       xlab = 'Depth (mm)', ylab = 'Buds / mm',
+       type = "n", las = 1, bty = "l",
+       xlab = "Depth (mm)", ylab = "Buds / mm",
        ylim = yaxs_lims, xlim = xaxs_lims)
   
   sample_plot <- sample(seq_len(nrow(beta_gform_burn[[i]])), size = n_plot, replace = FALSE)
@@ -43,7 +49,7 @@ for (i in seq_along(beta_gform_burn)) {
     
     # plot mean fitted value
     lines(yplot ~ hist_tmp$mids,
-          lwd = 1, col = ggplot2::alpha('gray50', 0.4))
+          lwd = 1, col = ggplot2::alpha("gray50", 0.4))
     
     plot_all <- plot_all + plot_tmp
     
@@ -52,13 +58,13 @@ for (i in seq_along(beta_gform_burn)) {
   # add shaded region to denote sampling limits
   polygon(c(-20, -20, -5, -5),
           2 * c(yaxs_lims, rev(yaxs_lims)) - 5,
-          border = NA, col = ggplot2::alpha('gray85', 0.5))
+          border = NA, col = ggplot2::alpha("gray85", 0.5))
   polygon(c(80, 80, 150, 150),
           2 * c(yaxs_lims, rev(yaxs_lims)) - 5,
-          border = NA, col = ggplot2::alpha('gray85', 0.5))
+          border = NA, col = ggplot2::alpha("gray85", 0.5))
   
-  lines(c(exp(gform_mean) / 5.5) ~ hist_tmp$mids, lwd = 2, col = 'black')
-  lines(c(exp(c(plot_all / n_plot)) / 5.5) ~ hist_tmp$mids, lwd = 2, col = 'black', lty = 2)
+  lines(c(exp(gform_mean) / 5.5) ~ hist_tmp$mids, lwd = 2, col = "black")
+  lines(c(exp(c(plot_all / n_plot)) / 5.5) ~ hist_tmp$mids, lwd = 2, col = "black", lty = 2)
   
   # add some labels
   mtext(plot_name[i], side = 3, line = 0.5, adj = -0.02, cex = 1.5)
@@ -66,8 +72,8 @@ for (i in seq_along(beta_gform_burn)) {
 }
 dev.off()
 
-pdf(file = './outputs/plots/fitted_intercepts.pdf', width = 7, height = 7)
-plot_name <- c('Forbs', 'Grasses', 'Sub-shrubs', 'Woody plants')
+pdf(file = "./outputs/plots/fitted_intercepts.pdf", width = 7, height = 7)
+plot_name <- c("Forbs", "Grasses", "Sub-shrubs", "Woody plants")
 par(mfrow = c(2, 2), mar = c(4.8, 5.1, 2.5, 1.1))
 yaxs_lims <- c(-15, 95)
 xaxs_lims <- c(-6.5, 6.5)
@@ -87,8 +93,8 @@ for (i in seq_along(beta_gform_burn)) {
   gform_vhigh <- apply(beta_gform_clip[[i]], 2, quantile, 0.975)
   
   plot(c(-exp(gform_mean) / 5.5), hist_tmp$mids,
-       type = 'n', las = 1, bty = 'l',
-       ylab = 'Depth (mm)', xlab = 'Buds / mm',
+       type = "n", las = 1, bty = "l",
+       ylab = "Depth (mm)", xlab = "Buds / mm",
        ylim = yaxs_lims, xlim = xaxs_lims,
        xaxt = "n")
   
@@ -97,27 +103,27 @@ for (i in seq_along(beta_gform_burn)) {
   # add shaded region to denote sampling limits
   polygon(2 * c(yaxs_lims, rev(yaxs_lims)) - 5,
           c(-20, -20, -5, -5),
-          border = NA, col = ggplot2::alpha('gray85', 0.5))
+          border = NA, col = ggplot2::alpha("gray85", 0.5))
   polygon(2 * c(yaxs_lims, rev(yaxs_lims)) - 5,
           c(80, 80, 150, 150),
-          border = NA, col = ggplot2::alpha('gray85', 0.5))
+          border = NA, col = ggplot2::alpha("gray85", 0.5))
   
   # plot shaded regions for credible intervals
   polygon(c(-exp(gform_vlow) / 5.5 - eps_set, rev(-exp(gform_vhigh) / 5.5) - eps_set),
           c(hist_tmp$mids, rev(hist_tmp$mids)),
-          border = NA, col = 'gray75')
+          border = NA, col = "gray75")
   polygon(c(-exp(gform_low) / 5.5 - eps_set, rev(-exp(gform_high) / 5.5) - eps_set),
           c(hist_tmp$mids, rev(hist_tmp$mids)),
-          border = NA, col = 'gray55')
-  lines(c(-exp(gform_mean) / 5.5) - eps_set, hist_tmp$mids, lwd = 2, col = 'black')
+          border = NA, col = "gray55")
+  lines(c(-exp(gform_mean) / 5.5) - eps_set, hist_tmp$mids, lwd = 2, col = "black")
 
   polygon(c(exp(gform_vlow1) / 5.5 + eps_set, rev(exp(gform_vhigh1) / 5.5) + eps_set),
           c(hist_tmp$mids, rev(hist_tmp$mids)),
-          border = NA, col = 'gray75')
+          border = NA, col = "gray75")
   polygon(c(exp(gform_low1) / 5.5 + eps_set, rev(exp(gform_high1) / 5.5) + eps_set),
           c(hist_tmp$mids, rev(hist_tmp$mids)),
-          border = NA, col = 'gray55')
-  lines(c(exp(gform_mean1) / 5.5) + eps_set, hist_tmp$mids, lwd = 2, col = 'black')
+          border = NA, col = "gray55")
+  lines(c(exp(gform_mean1) / 5.5) + eps_set, hist_tmp$mids, lwd = 2, col = "black")
   
   lines(c(0, 0),
         c(min(hist_tmp$mids) - 10, max(hist_tmp$mids) + 10),
@@ -129,9 +135,9 @@ for (i in seq_along(beta_gform_burn)) {
 }
 dev.off()
 
-pdf(file = './outputs/plots/burn_effects.pdf', width = 7, height = 7)
+pdf(file = "./outputs/plots/burn_effects.pdf", width = 7, height = 7)
 
-plot_name <- c('Forbs', 'Grasses', 'Sub-shrubs', 'Woody plants')
+plot_name <- c("Forbs", "Grasses", "Sub-shrubs", "Woody plants")
 par(mfrow = c(2, 2), mar = c(4.8, 5.1, 2.5, 1.1))
 xaxs_lims <- c(-15, 95)
 yaxs_lims <- c(-1.2, 4.5)
@@ -147,29 +153,29 @@ for (i in seq_along(beta_gform_burn)) {
   gform_vhigh <- apply(burn_int, 2, quantile, 0.975)
   
   plot(gform_mean ~ hist_tmp$mids,
-       type = 'n', las = 1, bty = 'l',
-       xlab = 'Depth (mm)', ylab = 'Buds / mm',
+       type = "n", las = 1, bty = "l",
+       xlab = "Depth (mm)", ylab = "Buds / mm",
        ylim = yaxs_lims, xlim = xaxs_lims)
   
   # add shaded region to denote sampling limits
   polygon(c(-20, -20, -5, -5),
           2 * c(yaxs_lims, rev(yaxs_lims)),
-          border = NA, col = ggplot2::alpha('gray85', 0.5))
+          border = NA, col = ggplot2::alpha("gray85", 0.5))
   polygon(c(80, 80, 150, 150),
           2 * c(yaxs_lims, rev(yaxs_lims)),
-          border = NA, col = ggplot2::alpha('gray85', 0.5))
+          border = NA, col = ggplot2::alpha("gray85", 0.5))
   
   # plot shaded regions for credible intervals
   polygon(c(hist_tmp$mids, rev(hist_tmp$mids)),
           c(gform_vlow, rev(gform_vhigh)),
-          border = NA, col = 'gray75')
+          border = NA, col = "gray75")
   polygon(c(hist_tmp$mids, rev(hist_tmp$mids)),
           c(gform_low, rev(gform_high)),
-          border = NA, col = 'gray55')
+          border = NA, col = "gray55")
   
   lines(c(min(hist_tmp$mids) - 10, max(hist_tmp$mids) + 10),
         c(0, 0), lty = 2)
-  lines(gform_mean ~ hist_tmp$mids, lwd = 2, col = 'black')
+  lines(gform_mean ~ hist_tmp$mids, lwd = 2, col = "black")
   
   # add some labels
   mtext(plot_name[i], side = 3, line = 0.5, adj = -0.02, cex = 1.5)
@@ -178,8 +184,8 @@ for (i in seq_along(beta_gform_burn)) {
 
 dev.off()
 
-pdf(file = './outputs/plots/fitted_clip.pdf', width = 7, height = 7)
-plot_name <- c('Forbs', 'Grasses', 'Sub-shrubs', 'Woody plants')
+pdf(file = "./outputs/plots/fitted_clip.pdf", width = 7, height = 7)
+plot_name <- c("Forbs", "Grasses", "Sub-shrubs", "Woody plants")
 set.seed(123)
 # plot_name <- letters[1:4]
 par(mfrow = c(2, 2), mar = c(4.8, 5.1, 2.5, 1.1))
@@ -196,8 +202,8 @@ for (i in seq_along(beta_gform_clip)) {
   gform_vhigh <- apply(beta_gform_clip[[i]], 2, quantile, 0.975)
   
   plot(c(exp(gform_mean) / 5.5) ~ hist_tmp$mids,
-       type = 'n', las = 1, bty = 'l',
-       xlab = 'Depth (mm)', ylab = 'Buds / mm',
+       type = "n", las = 1, bty = "l",
+       xlab = "Depth (mm)", ylab = "Buds / mm",
        ylim = yaxs_lims, xlim = xaxs_lims)
   
   sample_plot <- sample(seq_len(nrow(beta_gform_clip[[i]])), size = n_plot, replace = FALSE)
@@ -223,7 +229,7 @@ for (i in seq_along(beta_gform_clip)) {
     
     # plot mean fitted value
     lines(c(exp(plot_tmp) / 5.5) ~ hist_tmp$mids,
-          lwd = 1, col = ggplot2::alpha('gray50', 0.4))
+          lwd = 1, col = ggplot2::alpha("gray50", 0.4))
     
     plot_all <- plot_all + plot_tmp
     
@@ -232,13 +238,13 @@ for (i in seq_along(beta_gform_clip)) {
   # add shaded region to denote sampling limits
   polygon(c(-20, -20, -5, -5),
           2 * c(yaxs_lims, rev(yaxs_lims)) - 5,
-          border = NA, col = ggplot2::alpha('gray85', 0.5))
+          border = NA, col = ggplot2::alpha("gray85", 0.5))
   polygon(c(80, 80, 150, 150),
           2 * c(yaxs_lims, rev(yaxs_lims)) - 5,
-          border = NA, col = ggplot2::alpha('gray85', 0.5))
+          border = NA, col = ggplot2::alpha("gray85", 0.5))
   
-  lines(c(exp(gform_mean) / 5.5) ~ hist_tmp$mids, lwd = 2, col = 'black')
-  lines(c(exp(c(plot_all / n_plot)) / 5.5) ~ hist_tmp$mids, lwd = 2, col = 'black', lty = 2)
+  lines(c(exp(gform_mean) / 5.5) ~ hist_tmp$mids, lwd = 2, col = "black")
+  lines(c(exp(c(plot_all / n_plot)) / 5.5) ~ hist_tmp$mids, lwd = 2, col = "black", lty = 2)
   
   # add some labels
   mtext(plot_name[i], side = 3, line = 0.5, adj = -0.02, cex = 1.5)
@@ -246,8 +252,8 @@ for (i in seq_along(beta_gform_clip)) {
 }
 dev.off()
 
-pdf(file = './outputs/plots/trait_effect_burn_maxht.pdf', width = 7, height = 7)
-plot_name <- attr(trait_data$MAXHTstd, 'scaled:center') + trait_seq[[1]] * attr(trait_data$MAXHTstd, 'scaled:scale') 
+pdf(file = "./outputs/plots/trait_effect_burn_maxht.pdf", width = 7, height = 7)
+plot_name <- attr(trait_data$MAXHTstd, "scaled:center") + trait_seq[[1]] * attr(trait_data$MAXHTstd, "scaled:scale") 
 par(mfrow = c(2, 2), mar = c(5.1, 5.1, 1.8, 1.1))
 ylim_set <- c(0, 1.6)
 for (i in seq_along(trait_effect_burn[[1]])) {
@@ -261,28 +267,28 @@ for (i in seq_along(trait_effect_burn[[1]])) {
   
   # plot mean fitted value
   plot(c(exp(gform_mean) / 5.5) ~ hist_tmp$mids,
-       type = 'l', las = 1, bty = 'l',
-       lwd = 2, col = 'gray30',
-       xlab = 'Depth (mm)', ylab = 'Buds / mm',
+       type = "l", las = 1, bty = "l",
+       lwd = 2, col = "gray30",
+       xlab = "Depth (mm)", ylab = "Buds / mm",
        ylim = ylim_set)
   
   # plot shaded regions for credible intervals
   polygon(c(hist_tmp$mids, rev(hist_tmp$mids)),
           c(exp(gform_vlow) / 5.5, rev(exp(gform_vhigh) / 5.5)),
-          border = NA, col = 'gray75')
+          border = NA, col = "gray75")
   polygon(c(hist_tmp$mids, rev(hist_tmp$mids)),
           c(exp(gform_low) / 5.5, rev(exp(gform_high) / 5.5)),
-          border = NA, col = 'gray55')
-  lines(c(exp(gform_mean) / 5.5) ~ hist_tmp$mids, lwd = 2, col = 'gray30')
+          border = NA, col = "gray55")
+  lines(c(exp(gform_mean) / 5.5) ~ hist_tmp$mids, lwd = 2, col = "gray30")
   
   # add some labels
-  mtext(paste0('Maximum height = ', round(plot_name[i], 0), ' cm'), side = 3, line = 0, adj = 1, cex = 1.25)
+  mtext(paste0("Maximum height = ", round(plot_name[i], 0), " cm"), side = 3, line = 0, adj = 1, cex = 1.25)
   
 }
 dev.off()
 
-pdf(file = './outputs/plots/trait_effect_burn_stems.pdf', width = 7, height = 7)
-plot_name <- attr(trait_data$STEMCATSstd, 'scaled:center') + trait_seq[[2]] * attr(trait_data$STEMCATSstd, 'scaled:scale') 
+pdf(file = "./outputs/plots/trait_effect_burn_stems.pdf", width = 7, height = 7)
+plot_name <- attr(trait_data$STEMCATSstd, "scaled:center") + trait_seq[[2]] * attr(trait_data$STEMCATSstd, "scaled:scale") 
 par(mfrow = c(2, 2), mar = c(5.1, 5.1, 1.8, 1.1))
 ylim_set <- c(0, 1.6)
 for (i in seq_along(trait_effect_burn[[2]])) {
@@ -296,28 +302,28 @@ for (i in seq_along(trait_effect_burn[[2]])) {
   
   # plot mean fitted value
   plot(c(exp(gform_mean) / 5.5) ~ hist_tmp$mids,
-       type = 'l', las = 1, bty = 'l',
-       lwd = 2, col = 'gray30',
-       xlab = 'Depth (mm)', ylab = 'Buds / mm',
+       type = "l", las = 1, bty = "l",
+       lwd = 2, col = "gray30",
+       xlab = "Depth (mm)", ylab = "Buds / mm",
        ylim = ylim_set)
   
   # plot shaded regions for credible intervals
   polygon(c(hist_tmp$mids, rev(hist_tmp$mids)),
           c(exp(gform_vlow) / 5.5, rev(exp(gform_vhigh) / 5.5)),
-          border = NA, col = 'gray75')
+          border = NA, col = "gray75")
   polygon(c(hist_tmp$mids, rev(hist_tmp$mids)),
           c(exp(gform_low) / 5.5, rev(exp(gform_high) / 5.5)),
-          border = NA, col = 'gray55')
-  lines(c(exp(gform_mean) / 5.5) ~ hist_tmp$mids, lwd = 2, col = 'gray30')
+          border = NA, col = "gray55")
+  lines(c(exp(gform_mean) / 5.5) ~ hist_tmp$mids, lwd = 2, col = "gray30")
   
   # add some labels
-  mtext(paste0('Stem counts = ', round(plot_name[i], 1)), side = 3, line = 0, adj = 1, cex = 1.25)
+  mtext(paste0("Stem counts = ", round(plot_name[i], 1)), side = 3, line = 0, adj = 1, cex = 1.25)
   
 }
 dev.off()
 
-pdf(file = './outputs/plots/trait_effect_burn_sla.pdf', width = 7, height = 7)
-plot_name <- attr(trait_data$SLAstd, 'scaled:center') + trait_seq[[3]] * attr(trait_data$SLAstd, 'scaled:scale') 
+pdf(file = "./outputs/plots/trait_effect_burn_sla.pdf", width = 7, height = 7)
+plot_name <- attr(trait_data$SLAstd, "scaled:center") + trait_seq[[3]] * attr(trait_data$SLAstd, "scaled:scale") 
 par(mfrow = c(2, 2), mar = c(5.1, 5.1, 1.8, 1.1))
 ylim_set <- c(0, 1.6)
 for (i in seq_along(trait_effect_burn[[3]])) {
@@ -331,28 +337,28 @@ for (i in seq_along(trait_effect_burn[[3]])) {
   
   # plot mean fitted value
   plot(c(exp(gform_mean) / 5.5) ~ hist_tmp$mids,
-       type = 'l', las = 1, bty = 'l',
-       lwd = 2, col = 'gray30',
-       xlab = 'Depth (mm)', ylab = 'Buds / mm',
+       type = "l", las = 1, bty = "l",
+       lwd = 2, col = "gray30",
+       xlab = "Depth (mm)", ylab = "Buds / mm",
        ylim = ylim_set)
   
   # plot shaded regions for credible intervals
   polygon(c(hist_tmp$mids, rev(hist_tmp$mids)),
           c(exp(gform_vlow) / 5.5, rev(exp(gform_vhigh) / 5.5)),
-          border = NA, col = 'gray75')
+          border = NA, col = "gray75")
   polygon(c(hist_tmp$mids, rev(hist_tmp$mids)),
           c(exp(gform_low) / 5.5, rev(exp(gform_high) / 5.5)),
-          border = NA, col = 'gray55')
-  lines(c(exp(gform_mean) / 5.5) ~ hist_tmp$mids, lwd = 2, col = 'gray30')
+          border = NA, col = "gray55")
+  lines(c(exp(gform_mean) / 5.5) ~ hist_tmp$mids, lwd = 2, col = "gray30")
   
   # add some labels
-  mtext(paste0('SLA = ', round(plot_name[i], 1)), side = 3, line = 0, adj = 1, cex = 1.25)
+  mtext(paste0("SLA = ", round(plot_name[i], 1)), side = 3, line = 0, adj = 1, cex = 1.25)
   
 }
 dev.off()
 
-pdf(file = './outputs/plots/trait_effect_clip_maxht.pdf', width = 7, height = 7)
-plot_name <- attr(trait_data$MAXHTstd, 'scaled:center') + trait_seq[[1]] * attr(trait_data$MAXHTstd, 'scaled:scale') 
+pdf(file = "./outputs/plots/trait_effect_clip_maxht.pdf", width = 7, height = 7)
+plot_name <- attr(trait_data$MAXHTstd, "scaled:center") + trait_seq[[1]] * attr(trait_data$MAXHTstd, "scaled:scale") 
 par(mfrow = c(2, 2), mar = c(5.1, 5.1, 1.8, 1.1))
 ylim_set <- c(0, 1.6)
 for (i in seq_along(trait_effect_clip[[1]])) {
@@ -366,28 +372,28 @@ for (i in seq_along(trait_effect_clip[[1]])) {
   
   # plot mean fitted value
   plot(c(exp(gform_mean) / 5.5) ~ hist_tmp$mids,
-       type = 'l', las = 1, bty = 'l',
-       lwd = 2, col = 'gray30',
-       xlab = 'Depth (mm)', ylab = 'Buds / mm',
+       type = "l", las = 1, bty = "l",
+       lwd = 2, col = "gray30",
+       xlab = "Depth (mm)", ylab = "Buds / mm",
        ylim = ylim_set)
   
   # plot shaded regions for credible intervals
   polygon(c(hist_tmp$mids, rev(hist_tmp$mids)),
           c(exp(gform_vlow) / 5.5, rev(exp(gform_vhigh) / 5.5)),
-          border = NA, col = 'gray75')
+          border = NA, col = "gray75")
   polygon(c(hist_tmp$mids, rev(hist_tmp$mids)),
           c(exp(gform_low) / 5.5, rev(exp(gform_high) / 5.5)),
-          border = NA, col = 'gray55')
-  lines(c(exp(gform_mean) / 5.5) ~ hist_tmp$mids, lwd = 2, col = 'gray30')
+          border = NA, col = "gray55")
+  lines(c(exp(gform_mean) / 5.5) ~ hist_tmp$mids, lwd = 2, col = "gray30")
   
   # add some labels
-  mtext(paste0('Maximum height = ', round(plot_name[i], 0), ' cm'), side = 3, line = 0, adj = 1, cex = 1.25)
+  mtext(paste0("Maximum height = ", round(plot_name[i], 0), " cm"), side = 3, line = 0, adj = 1, cex = 1.25)
   
 }
 dev.off()
 
-pdf(file = './outputs/plots/trait_effect_clip_stems.pdf', width = 7, height = 7)
-plot_name <- attr(trait_data$STEMCATSstd, 'scaled:center') + trait_seq[[2]] * attr(trait_data$STEMCATSstd, 'scaled:scale') 
+pdf(file = "./outputs/plots/trait_effect_clip_stems.pdf", width = 7, height = 7)
+plot_name <- attr(trait_data$STEMCATSstd, "scaled:center") + trait_seq[[2]] * attr(trait_data$STEMCATSstd, "scaled:scale") 
 par(mfrow = c(2, 2), mar = c(5.1, 5.1, 1.8, 1.1))
 ylim_set <- c(0, 1.6)
 for (i in seq_along(trait_effect_clip[[2]])) {
@@ -401,28 +407,28 @@ for (i in seq_along(trait_effect_clip[[2]])) {
   
   # plot mean fitted value
   plot(c(exp(gform_mean) / 5.5) ~ hist_tmp$mids,
-       type = 'l', las = 1, bty = 'l',
-       lwd = 2, col = 'gray30',
-       xlab = 'Depth (mm)', ylab = 'Buds / mm',
+       type = "l", las = 1, bty = "l",
+       lwd = 2, col = "gray30",
+       xlab = "Depth (mm)", ylab = "Buds / mm",
        ylim = ylim_set)
   
   # plot shaded regions for credible intervals
   polygon(c(hist_tmp$mids, rev(hist_tmp$mids)),
           c(exp(gform_vlow) / 5.5, rev(exp(gform_vhigh) / 5.5)),
-          border = NA, col = 'gray75')
+          border = NA, col = "gray75")
   polygon(c(hist_tmp$mids, rev(hist_tmp$mids)),
           c(exp(gform_low) / 5.5, rev(exp(gform_high) / 5.5)),
-          border = NA, col = 'gray55')
-  lines(c(exp(gform_mean) / 5.5) ~ hist_tmp$mids, lwd = 2, col = 'gray30')
+          border = NA, col = "gray55")
+  lines(c(exp(gform_mean) / 5.5) ~ hist_tmp$mids, lwd = 2, col = "gray30")
   
   # add some labels
-  mtext(paste0('Stem counts = ', round(plot_name[i], 1)), side = 3, line = 0, adj = 1, cex = 1.25)
+  mtext(paste0("Stem counts = ", round(plot_name[i], 1)), side = 3, line = 0, adj = 1, cex = 1.25)
   
 }
 dev.off()
 
-pdf(file = './outputs/plots/trait_effect_clip_sla.pdf', width = 7, height = 7)
-plot_name <- attr(trait_data$SLAstd, 'scaled:center') + trait_seq[[3]] * attr(trait_data$SLAstd, 'scaled:scale') 
+pdf(file = "./outputs/plots/trait_effect_clip_sla.pdf", width = 7, height = 7)
+plot_name <- attr(trait_data$SLAstd, "scaled:center") + trait_seq[[3]] * attr(trait_data$SLAstd, "scaled:scale") 
 par(mfrow = c(2, 2), mar = c(5.1, 5.1, 1.8, 1.1))
 ylim_set <- c(0, 1.6)
 for (i in seq_along(trait_effect_clip[[3]])) {
@@ -436,28 +442,28 @@ for (i in seq_along(trait_effect_clip[[3]])) {
   
   # plot mean fitted value
   plot(c(exp(gform_mean) / 5.5) ~ hist_tmp$mids,
-       type = 'l', las = 1, bty = 'l',
-       lwd = 2, col = 'gray30',
-       xlab = 'Depth (mm)', ylab = 'Buds / mm',
+       type = "l", las = 1, bty = "l",
+       lwd = 2, col = "gray30",
+       xlab = "Depth (mm)", ylab = "Buds / mm",
        ylim = ylim_set)
   
   # plot shaded regions for credible intervals
   polygon(c(hist_tmp$mids, rev(hist_tmp$mids)),
           c(exp(gform_vlow) / 5.5, rev(exp(gform_vhigh) / 5.5)),
-          border = NA, col = 'gray75')
+          border = NA, col = "gray75")
   polygon(c(hist_tmp$mids, rev(hist_tmp$mids)),
           c(exp(gform_low) / 5.5, rev(exp(gform_high) / 5.5)),
-          border = NA, col = 'gray55')
-  lines(c(exp(gform_mean) / 5.5) ~ hist_tmp$mids, lwd = 2, col = 'gray30')
+          border = NA, col = "gray55")
+  lines(c(exp(gform_mean) / 5.5) ~ hist_tmp$mids, lwd = 2, col = "gray30")
   
   # add some labels
-  mtext(paste0('SLA = ', round(plot_name[i], 1)), side = 3, line = 0, adj = 1, cex = 1.25)
+  mtext(paste0("SLA = ", round(plot_name[i], 1)), side = 3, line = 0, adj = 1, cex = 1.25)
   
 }
 dev.off()
 
 # trait effects
-pdf(file = './outputs/plots/regression_coefficients.pdf', width = 7, height = 10)
+pdf(file = "./outputs/plots/regression_coefficients.pdf", width = 7, height = 10)
 layout(matrix(1:8, ncol = 2, byrow = TRUE), heights = c(0.12, rep(1, 3)))
 par(mar = c(0, 0, 0, 0))
 plot(1 ~ 1, type = "n", bty = "n", xaxt = "n", yaxt = "n", xlab = "", ylab = "")
@@ -481,9 +487,9 @@ for (i in seq_len(3)) {
   
   # plot mean fitted value
   plot(exp(plot_mean) ~ hist_tmp$mids,
-       type = 'l', las = 1, bty = 'l',
-       lwd = 2, col = 'gray30',
-       xlab = 'Depth (mm)', ylab = 'Effect',
+       type = "l", las = 1, bty = "l",
+       lwd = 2, col = "gray30",
+       xlab = "Depth (mm)", ylab = "Effect",
        ylim = ylim_set,
        cex.lab = 1.5,
        log = "y")
@@ -491,12 +497,12 @@ for (i in seq_len(3)) {
   # plot shaded regions for credible intervals
   polygon(c(hist_tmp$mids, rev(hist_tmp$mids)),
           c(exp(plot_vlow), rev(exp(plot_vhigh))),
-          border = NA, col = 'gray75')
+          border = NA, col = "gray75")
   polygon(c(hist_tmp$mids, rev(hist_tmp$mids)),
           c(exp(plot_low), rev(exp(plot_high))),
-          border = NA, col = 'gray55')
+          border = NA, col = "gray55")
   
-  lines(exp(plot_mean) ~ hist_tmp$mids, lwd = 2, col = 'gray30')
+  lines(exp(plot_mean) ~ hist_tmp$mids, lwd = 2, col = "gray30")
   lines(c(min(hist_tmp$mids) - 10, max(hist_tmp$mids) + 10),
         c(1, 1), lty = 2)
   
@@ -520,9 +526,9 @@ for (i in seq_len(3)) {
   
   # plot mean fitted value
   plot(exp(plot_mean) ~ hist_tmp$mids,
-       type = 'l', las = 1, bty = 'l',
-       lwd = 2, col = 'gray30',
-       xlab = 'Depth (mm)', ylab = 'Effect',
+       type = "l", las = 1, bty = "l",
+       lwd = 2, col = "gray30",
+       xlab = "Depth (mm)", ylab = "Effect",
        ylim = ylim_set,
        cex.lab = 1.5,
        log = "y")
@@ -530,12 +536,12 @@ for (i in seq_len(3)) {
   # plot shaded regions for credible intervals
   polygon(c(hist_tmp$mids, rev(hist_tmp$mids)),
           c(exp(plot_vlow), rev(exp(plot_vhigh))),
-          border = NA, col = 'gray75')
+          border = NA, col = "gray75")
   polygon(c(hist_tmp$mids, rev(hist_tmp$mids)),
           c(exp(plot_low), rev(exp(plot_high))),
-          border = NA, col = 'gray55')
+          border = NA, col = "gray55")
   
-  lines(exp(plot_mean) ~ hist_tmp$mids, lwd = 2, col = 'gray30')
+  lines(exp(plot_mean) ~ hist_tmp$mids, lwd = 2, col = "gray30")
   lines(c(min(hist_tmp$mids) - 10, max(hist_tmp$mids) + 10),
         c(1, 1), lty = 2)
   
@@ -558,7 +564,7 @@ colnames(beta_resprout_samples) <- c("Clip", "Grasses", "Sub-shrubs", "Woody pla
                                      "Clip:Grasses", "Clip:Sub-shrubs", "Clip:Woody plants",
                                      "Clip:Max. height", "Clip:Stem counts", "Clip:SLA")
 
-pdf(file = './outputs/plots/resprout_trait_effects.pdf', width = 7, height = 6)
+pdf(file = "./outputs/plots/resprout_trait_effects.pdf", width = 7, height = 6)
 
 par(mfrow = c(1, 2))
 burn_int <- cbind(alpha_resprout_samples,
