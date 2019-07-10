@@ -1,4 +1,4 @@
-### Data files supporting Vesk & Yen (submitted) Plant resprouting: How many sprouts and how deep? 
+### Data files supporting Vesk & Yen (submitted) How many sprouts and how deep? Flexible modelling of multi-species experimental disturbances. 
 
 
 #### Overview
