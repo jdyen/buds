@@ -1,13 +1,13 @@
-# R code to fit bud depths model
+# R code to fit sprout depths model
 
 # set working directory
-setwd("~/Dropbox/research/buds/")
+setwd("~/Dropbox/research/sprouts/")
 
 # load packages
 library(greta.fda)
 library(greta)
 
-# load data (currently removing NAs in traits)
+# load data (currently removing species with NAs in traits)
 source("./code/load-data.R")
 
 # prepare data setg
@@ -143,6 +143,27 @@ for (i in seq_along(beta_gform_burn)) {
       beta_tmp %*% as.matrix(fda_response$spline_basis) +
       beta_tmp2 %*% as.matrix(fda_response$spline_basis)
   }
+}
+
+# compare growth form effects and calculate Pr(x > y)
+gform_comparison_burn <- matrix(NA, nrow = 6, ncol = ncol(beta_gform_burn[[1]]))
+gform_comparison_clip <- matrix(NA, nrow = 6, ncol = ncol(beta_gform_clip[[1]]))
+compare_burn <- vector("list", length = 6)
+compare_clip <- vector("list", length = 6)
+rownames(gform_comparison_burn) <- rownames(gform_comparison_clip) <- 
+  c("forb_gr", "forb_ssh", "forb_wd", "gr_ssh", "gr_wd", "ssh_wd")
+names(compare_burn) <- names(compare_clip) <- rownames(gform_comparison_burn)
+idx <- 1
+for (i in seq_len(length(beta_gform_burn) - 1)) {
+  
+  for (j in (i + 1):length(beta_gform_burn)) {
+    compare_burn[[idx]] <- exp(beta_gform_burn[[i]] / 5.5) - exp(beta_gform_burn[[j]] / 5.5)
+    gform_comparison_burn[idx, ] <- apply(compare_burn[[idx]], 2, function(x) sum(x > 0) / length(x))
+    compare_clip[[idx]] <- exp(beta_gform_clip[[i]] / 5.5) - exp(beta_gform_clip[[j]] / 5.5)
+    gform_comparison_clip[idx, ] <- apply(compare_clip[[idx]], 2, function(x) sum(x > 0) / length(x))
+    idx <- idx + 1
+  }
+  
 }
 
 # calculate trait depth distributions

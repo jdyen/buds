@@ -1,7 +1,7 @@
-# code to load and clean buds data
+# code to load and clean sprouts data
 
 # load raw data
-raw_data <- read.csv("./data/compiled-bud-depths.csv", stringsAsFactors = FALSE)
+raw_data <- read.csv("./data/compiled-sprout-depths.csv", stringsAsFactors = FALSE)
 
 # load p_resprout data
 resprout <- read.csv("data/survival-data.csv", stringsAsFactors = FALSE)
@@ -10,7 +10,7 @@ resprout <- read.csv("data/survival-data.csv", stringsAsFactors = FALSE)
 raw_data <- raw_data[raw_data$treat %in% c("c", "b"), ]
 
 # load trait data
-trait_data <- read.csv("./data/buds-traits-data.csv")
+trait_data <- read.csv("./data/sprouts-traits-data.csv")
 
 # identify columns that contain depth measurements
 data_cols <- c(6:ncol(raw_data))
