@@ -9,7 +9,7 @@ The analyses presented here use the `greta` and `greta.fda` R packages. `greta` 
 install.packages("greta")
 
 # from GitHub
-devtools::install_github("greta-dev/greta@dev")
+devtools::install_github("greta-dev/greta")
 ```
 
 The `greta.fda` package can be installed from GitHub:
