@@ -1,7 +1,7 @@
 # code to load and clean sprouts data
 
 # load raw data
-raw_data <- read.csv("./data/compiled-sprout-depths.csv", stringsAsFactors = FALSE)
+raw_data <- read.csv("data/compiled-sprout-depths.csv", stringsAsFactors = FALSE)
 
 # load p_resprout data
 resprout <- read.csv("data/survival-data.csv", stringsAsFactors = FALSE)
@@ -65,12 +65,9 @@ data_info$YEAR <- as.integer(data_info$YEAR)
 trait_data <- trait_data[!apply(trait_data, 1, function(x) any(is.na(x))), ]
 
 # standardise trait data
-trait_data$MAXHTstd <- scale(trait_data$MAXHT)
-trait_data$STEMCATSstd <- scale(trait_data$STEMCATS)
-trait_data$SLAstd <- scale(trait_data$SLA)
-trait_data$LWCstd <- scale(trait_data$LWC)
-trait_data$BAstd <- scale(trait_data$BA)
-trait_data$CAstd <- scale(trait_data$CA)
+trait_data$MAXHTstd <- scale(trait_data$MAXHT_cm)
+trait_data$STEMCATSstd <- scale(trait_data$STEMCATS_1_2.3_4.10_11.30_.30)
+trait_data$SLAstd <- scale(trait_data$specific_leaf_area_mm2.mg)
 
 # add trait data to data_info
 trait_rows <- match(data_info$SPP, trait_data$CODE)
@@ -78,9 +75,6 @@ data_info$GFORM <- trait_data$GFORM[trait_rows]
 data_info$MAXHTstd <- trait_data$MAXHTstd[trait_rows]
 data_info$STEMCATSstd <- trait_data$STEMCATSstd[trait_rows]
 data_info$SLAstd <- trait_data$SLAstd[trait_rows]
-data_info$LWCstd <- trait_data$LWCstd[trait_rows]
-data_info$BAstd <- trait_data$BAstd[trait_rows]
-data_info$CAstd <- trait_data$CAstd[trait_rows]
 
 # add trait data to resprout data
 resprout <- data.frame(resprout,
