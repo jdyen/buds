@@ -3,6 +3,9 @@
 # set working directory
 setwd("~/Dropbox/research/sprouts/")
 
+# set a seed to fix results
+set.seed(2019-09-16)
+
 # load packages
 library(greta.fda)
 library(greta)
