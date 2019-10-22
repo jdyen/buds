@@ -86,9 +86,8 @@ dev.off()
 get(plot_type)(file = paste0("outputs/plots/Fig2.", file_type), width = width_set, height = height_set, units = unit_set, res = res_set)
 plot_name <- c("Forbs", "Grasses", "Sub-shrubs", "Woody plants")
 set.seed(123)
-# plot_name <- letters[1:4]
 par(mfrow = c(2, 2), mar = c(4.8, 5.1, 2.5, 1.1))
-xaxs_lims <- c(-3, 58)
+xaxs_lims <- c(-3, 48)
 yaxs_lims <- c(0, 4)
 n_plot <- 200
 for (i in seq_along(beta_gform_clip)) {
@@ -127,7 +126,9 @@ for (i in seq_along(beta_gform_clip)) {
     plot_tmp <- c(ind_var) * plot_tmp
     
     # plot mean fitted value
-    lines(c(exp(plot_tmp) / 5.5) ~ hist_tmp$mids,
+    if (ind_var > 0)
+      plot_tmp <- c(exp(plot_tmp) / 5.5)
+    lines(plot_tmp ~ hist_tmp$mids,
           lwd = 1, col = ggplot2::alpha("gray50", 0.4))
     
     plot_all <- plot_all + plot_tmp
@@ -148,8 +149,8 @@ get(plot_type)(file = paste0("outputs/plots/Fig3.", file_type), width = width_se
 plot_name <- c("Forbs", "Grasses", "Sub-shrubs", "Woody plants")
 set.seed(123)
 par(mfrow = c(2, 2), mar = c(4.8, 5.1, 2.5, 1.1))
-xaxs_lims <- c(-3, 58)
-yaxs_lims <- c(0, 10)
+xaxs_lims <- c(-3, 48)
+yaxs_lims <- c(0, 8)
 n_plot <- 200
 for (i in seq_along(beta_gform_burn)) {
   
@@ -181,11 +182,11 @@ for (i in seq_along(beta_gform_burn)) {
     
     ind_var <- ifelse(runif(1) < p_sprouted, 1, 0)
     plot_tmp <- c(ind_var) * plot_tmp
-    # yplot <- rpois(length(plot_tmp), lambda = c(exp(plot_tmp) / 5.5))
-    yplot <- c(exp(plot_tmp) / 5.5)
-    
+
     # plot mean fitted value
-    lines(yplot ~ hist_tmp$mids,
+    if (ind_var > 0)
+      plot_tmp <- c(exp(plot_tmp) / 5.5)
+    lines(plot_tmp ~ hist_tmp$mids,
           lwd = 1, col = ggplot2::alpha("gray50", 0.4))
     
     plot_all <- plot_all + plot_tmp
@@ -206,7 +207,7 @@ get(plot_type)(file = paste0("outputs/plots/Fig4.", file_type), width = width_se
 
 plot_name <- c("Forbs", "Grasses", "Sub-shrubs", "Woody plants")
 par(mfrow = c(2, 2), mar = c(4.8, 5.1, 2.5, 1.1))
-xaxs_lims <- c(-3, 58)
+xaxs_lims <- c(-3, 48)
 yaxs_lims <- c(-2, 6.5)
 
 for (i in seq_along(beta_gform_burn)) {
@@ -254,7 +255,7 @@ plot(1 ~ 1, type = "n", bty = "n", xaxt = "n", yaxt = "n", xlab = "", ylab = "")
 text(1, 1, "Burn", cex = 2.8, xpd = TRUE)
 par(mar = c(4.8, 5.1, 2.5, 1.1))
 ylim_set <- c(0.05, 2.0)
-xlim_set <- c(-3, 58)
+xlim_set <- c(-3, 48)
 plot_label <- rep(c("Max. height", "Stem counts", "SLA"), each = 2)
 for (i in seq_len(3)) {
   
@@ -348,7 +349,7 @@ plot_name <- c("Forbs, Grasses",
                "Grasses, Woody plants",
                "Sub-shrubs, Woody plants")
 par(mfrow = c(3, 2), mar = c(4.8, 5.1, 2.5, 1.1))
-xaxs_lims <- c(-3, 58)
+xaxs_lims <- c(-3, 48)
 yaxs_lims <- c(-2, 2)
 for (i in seq_along(compare_clip)) {
   
@@ -390,7 +391,7 @@ plot_name <- c("Forbs, Grasses",
                "Grasses, Woody plants",
                "Sub-shrubs, Woody plants")
 par(mfrow = c(3, 2), mar = c(4.8, 5.1, 2.5, 1.1))
-xaxs_lims <- c(-3, 58)
+xaxs_lims <- c(-3, 48)
 yaxs_lims <- c(-2, 2)
 for (i in seq_along(compare_burn)) {
   
@@ -427,8 +428,8 @@ dev.off()
 get(plot_type)(file = paste0("outputs/plots/FigS3.", file_type), width = width_set, height = height_set, units = unit_set, res = res_set)
 plot_name <- attr(trait_data$MAXHTstd, "scaled:center") + trait_seq[[1]] * attr(trait_data$MAXHTstd, "scaled:scale") 
 par(mfrow = c(2, 2), mar = c(5.1, 5.1, 1.8, 1.1))
-ylim_set <- c(0, 3.5)
-xlim_set <- c(-3, 58)
+ylim_set <- c(0, 2.0)
+xlim_set <- c(-3, 48)
 for (i in seq_along(trait_effect_clip[[1]])) {
   
   # calculate fitted summaries
@@ -464,8 +465,8 @@ dev.off()
 get(plot_type)(file = paste0("outputs/plots/FigS4.", file_type), width = width_set, height = height_set, units = unit_set, res = res_set)
 plot_name <- attr(trait_data$MAXHTstd, "scaled:center") + trait_seq[[1]] * attr(trait_data$MAXHTstd, "scaled:scale") 
 par(mfrow = c(2, 2), mar = c(5.1, 5.1, 1.8, 1.1))
-ylim_set <- c(0, 3.5)
-xlim_set <- c(-3, 58)
+ylim_set <- c(0, 2.0)
+xlim_set <- c(-3, 48)
 for (i in seq_along(trait_effect_burn[[1]])) {
   
   # calculate fitted summaries
@@ -499,10 +500,12 @@ dev.off()
 
 # Effect of stem categories under clip treatment
 get(plot_type)(file = paste0("outputs/plots/FigS5.", file_type), width = width_set, height = height_set, units = unit_set, res = res_set)
-plot_name <- attr(trait_data$STEMCATSstd, "scaled:center") + trait_seq[[2]] * attr(trait_data$STEMCATSstd, "scaled:scale") 
+plot_name <- attr(trait_data$STEMCATSstd, "scaled:center") + trait_seq[[2]] * attr(trait_data$STEMCATSstd, "scaled:scale")
+bin_vals <- seq(0, 2, by = 0.5)
+plot_name <- round(10 ^ (bin_vals[floor(plot_name)] + 0.5 * (plot_name %% 1)), 0)
 par(mfrow = c(2, 2), mar = c(5.1, 5.1, 1.8, 1.1))
 ylim_set <- c(0, 2.5)
-xlim_set <- c(-3, 58)
+xlim_set <- c(-3, 48)
 for (i in seq_along(trait_effect_clip[[2]])) {
   
   # calculate fitted summaries
@@ -537,9 +540,11 @@ dev.off()
 # Effect of stem categories under burn treatment
 get(plot_type)(file = paste0("outputs/plots/FigS6.", file_type), width = width_set, height = height_set, units = unit_set, res = res_set)
 plot_name <- attr(trait_data$STEMCATSstd, "scaled:center") + trait_seq[[2]] * attr(trait_data$STEMCATSstd, "scaled:scale") 
+bin_vals <- seq(0, 2, by = 0.5)
+plot_name <- round(10 ^ (bin_vals[floor(plot_name)] + 0.5 * (plot_name %% 1)), 0)
 par(mfrow = c(2, 2), mar = c(5.1, 5.1, 1.8, 1.1))
 ylim_set <- c(0, 2.5)
-xlim_set <- c(-3, 58)
+xlim_set <- c(-3, 48)
 for (i in seq_along(trait_effect_burn[[2]])) {
   
   # calculate fitted summaries
@@ -576,7 +581,7 @@ get(plot_type)(file = paste0("outputs/plots/FigS7.", file_type), width = width_s
 plot_name <- attr(trait_data$SLAstd, "scaled:center") + trait_seq[[3]] * attr(trait_data$SLAstd, "scaled:scale") 
 par(mfrow = c(2, 2), mar = c(5.1, 5.1, 1.8, 1.1))
 ylim_set <- c(0, 2.5)
-xlim_set <- c(-3, 58)
+xlim_set <- c(-3, 48)
 for (i in seq_along(trait_effect_clip[[3]])) {
   
   # calculate fitted summaries
@@ -613,7 +618,7 @@ get(plot_type)(file = paste0("outputs/plots/FigS8.", file_type), width = width_s
 plot_name <- attr(trait_data$SLAstd, "scaled:center") + trait_seq[[3]] * attr(trait_data$SLAstd, "scaled:scale") 
 par(mfrow = c(2, 2), mar = c(5.1, 5.1, 1.8, 1.1))
 ylim_set <- c(0, 2.5)
-xlim_set <- c(-3, 58)
+xlim_set <- c(-3, 48)
 for (i in seq_along(trait_effect_burn[[3]])) {
   
   # calculate fitted summaries
