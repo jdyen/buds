@@ -34,5 +34,5 @@ The `sprouts-trait-data.csv` file has one row per species with 9 columns contain
 - `BA`: (not used in analyses) the basal area of each species in mm.
 - `CA`: (not used in analyses) the canopy area of each species in mm.
 - `SPECIES`: the full species name.
-- 'STEMCOUNTS': count variable, the number of stems of each species, back-calculated from STEMCATS.
+- `STEMCOUNTS`: count variable, the number of stems of each species, back-calculated from STEMCATS.
 
